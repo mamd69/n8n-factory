@@ -43,7 +43,7 @@ The Factory is a small stack of layers working together:
 - An email address
 - About **30–45 minutes**
 - A **Claude account** — Pro ($20/mo) or Max ($100–200/mo) — sign up at [claude.ai](https://claude.ai)
-- A **paid n8n account** — required, because the free plan can't create the API key the Factory needs. Get one at [n8n.io](https://n8n.io) (cloud) — any paid tier works.
+- A **paid n8n account** — required, because the free plan can't create the API key the Factory needs. **[Upgrade your n8n account through this link](https://n8n.partnerlinks.io/p2xklomu2gq2)** (cloud) — any paid tier works.
 
 You do **not** need a GitHub account yet — we'll create one in Part 1.
 
