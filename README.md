@@ -92,15 +92,60 @@ When it loads you'll see **VS Code** — a code editor — with three areas:
 
 > 💡 To preview any `.md` file (like this one) as nice formatted text, open it and press **Ctrl+Shift+V** (Windows) or **Cmd+Shift+V** (Mac).
 
-## Part 4 — Install Claude Code and sign in
+## Part 4 — Install Claude Code
+
+There are two ways to run Claude Code. **Pick one:**
+
+- **Part 4a — VS Code Extension** — point-and-click, easiest. *Recommended for beginners.*
+- **Part 4b — Terminal** — runs in the bottom Terminal panel, with handy `dsp` shortcuts.
+
+Both work exactly the same for building workflows. If you're not sure, use **4a**.
+
+### Part 4a — VS Code Extension (recommended)
 
 1. In the left sidebar, click the **Extensions** icon (four squares, one flying off).
 2. In the search box, type **Claude Code**.
 3. On the official **Claude Code** extension (by Anthropic), click **Install**.
-4. When it finishes, the Claude panel opens. Click **Sign in** and follow the prompts to log in with your Claude account (the Pro or Max account from the requirements).
-5. When asked how Claude should handle file changes, choose the option that lets it **edit files automatically** (often called *Accept Edits* / *Auto-accept edits*). This lets the Factory work smoothly without stopping to ask permission for every small change.
+4. When it finishes, the Claude panel opens. Click **Sign in** and log in with your Claude account (the Pro or Max account from the requirements).
+5. When asked how Claude should handle file changes, choose **Accept Edits** (also called *Auto-accept edits*). This lets the Factory work smoothly without asking permission for every small change.
 
-✅ Claude Code is now running inside your Codespace.
+✅ Claude Code is now running. **Skip Part 4b** and go to [Part 5](#part-5--connect-your-n8n-account).
+
+### Part 4b — Terminal (with `dsp` shortcuts)
+
+Prefer the terminal? Here's the setup.
+
+**1. Open the Terminal.** It's the panel along the bottom of your Codespace — click the **Terminal** tab. *(Don't see it? Press `Ctrl` + `` ` `` — the backtick key, next to the `1`.)*
+
+**2. Install Claude Code.** Paste this line into the terminal and press Enter, then wait 1–2 minutes:
+
+```bash
+curl -fsSL https://claude.ai/install.sh | bash
+```
+
+**3. Create the `dsp` shortcuts.** By default Claude Code asks permission before almost every action, which is slow for automation. These two shortcuts launch it in "skip permissions" mode so the Factory runs smoothly. Paste this single line and press Enter:
+
+```bash
+echo -e "alias dsp='claude --dangerously-skip-permissions'\nalias dsp-c='claude --dangerously-skip-permissions -c'" >> ~/.bashrc
+```
+
+Then load the shortcuts:
+
+```bash
+source ~/.bashrc
+```
+
+You now have two commands:
+- **`dsp`** — start Claude Code (skipping permission prompts)
+- **`dsp-c`** — start Claude Code and continue your last conversation
+
+> ⚠️ **Safety note.** "Skip permissions" lets Claude run commands without asking first. That's fine **here** — a private Codespace is a safe, throwaway environment. Only use this mode in environments you trust.
+
+**4. Start and sign in.** Type `dsp` and press Enter. The first time:
+- Choose **1** to sign in with your Claude Pro/Max account.
+- Open the link it shows, click **Authorize**, and paste the key back into the terminal. *(If authorizing fails the first time, open the link again and retry — a known hiccup.)*
+
+✅ Claude Code is now running in your terminal.
 
 ## Part 5 — Connect your n8n account
 
@@ -124,10 +169,12 @@ Claude will create the file and ask you for the two values. Paste them in when p
 
 The connector only loads when a Claude Code session starts, so start a new one:
 
-1. In the Claude Code panel, click the **+** (New session) button at the top.
-2. The new session loads the connection from `.mcp.json`.
+- **Extension (4a):** click the **+** (New session) button at the top of the Claude Code panel.
+- **Terminal (4b):** type `exit` to close Claude Code, then run `dsp` again.
 
-Now **test the connection for real.** In the Claude Code chat, ask:
+The new session loads the connection from `.mcp.json`.
+
+Now **test the connection for real.** In Claude Code, ask:
 
 > **What n8n workflows do I have?**
 
@@ -274,7 +321,7 @@ Things you can ask the Factory any time:
 1. Check that `.mcp.json` exists (not just `.mcp.json.example`) and that both the URL and API key are filled in with no quotes missing.
 2. The URL should have no trailing slash and look like `https://your-name.app.n8n.cloud`.
 3. API keys expire. If yours is old, create a fresh one in n8n (**Settings → n8n API**) and update `.mcp.json`.
-4. After any change to `.mcp.json`, start a **new Claude Code session** (the **+** button) — changes only take effect in a fresh session.
+4. After any change to `.mcp.json`, start a **new Claude Code session** — extension: the **+** button; terminal: `exit` then `dsp` again. Changes only take effect in a fresh session.
 5. Re-test by asking *"What n8n workflows do I have?"* — never rely on a "Connected" badge.
 
 **A workflow runs but a step fails.**
