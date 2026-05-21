@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The n8n Factory — Your AI Workflow Automation System</title>
+<style>
+  :root{
+    --orange:#F0530E;
+    --orange-soft:#FF8A4C;
+    --navy:#0C1422;
+    --navy-2:#111C30;
+    --card:#1A2740;
+    --card-2:#22324F;
+    --line:#2E405F;
+    --text:#EAF0FA;
+    --muted:#9BAEC9;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--navy);
+    color:var(--text);
+    overflow:hidden;
+  }
+
+  /* ---------- Slide deck ---------- */
+  .deck{height:100vh;width:100vw;position:relative;}
+  .slide{
+    position:absolute;inset:0;
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:5vh 7vw 12vh;
+    text-align:center;
+    background:
+      radial-gradient(900px 600px at 85% 12%, rgba(240,83,14,.16), transparent 60%),
+      radial-gradient(800px 600px at 12% 88%, rgba(63,110,200,.14), transparent 60%),
+      var(--navy);
+    animation:fade .45s ease;
+  }
+  .slide.active{display:flex;}
+  @keyframes fade{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+
+  /* ---------- Common bits ---------- */
+  .logo{position:fixed;top:26px;left:34px;height:34px;z-index:20;opacity:.95;}
+  .kicker{
+    color:var(--orange-soft);
+    font-weight:700;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    font-size:.82rem;
+    margin-bottom:18px;
+  }
+  h1{font-size:clamp(2rem,5.2vw,3.9rem);line-height:1.08;font-weight:800;}
+  h2{font-size:clamp(1.7rem,4vw,3rem);line-height:1.12;font-weight:800;margin-bottom:10px;}
+  .lead{
+    font-size:clamp(1rem,1.7vw,1.4rem);
+    color:var(--muted);
+    max-width:780px;
+    margin-top:18px;
+    line-height:1.6;
+  }
+  .accent{color:var(--orange-soft);}
+  .underline{
+    display:inline-block;
+    border-bottom:4px solid var(--orange);
+    padding-bottom:2px;
+  }
+
+  /* big emoji / icon */
+  .bigicon{
+    font-size:clamp(3rem,7vw,5.4rem);
+    margin-bottom:8px;
+    line-height:1;
+  }
+
+  /* analogy card */
+  .analogy{
+    margin-top:28px;
+    background:linear-gradient(180deg,var(--card),var(--card-2));
+    border:1px solid var(--line);
+    border-left:5px solid var(--orange);
+    border-radius:14px;
+    padding:20px 26px;
+    max-width:760px;
+    font-size:clamp(1rem,1.5vw,1.25rem);
+    line-height:1.55;
+    text-align:left;
+  }
+  .analogy b{color:var(--orange-soft);}
+  .analogy .tag{
+    display:block;
+    font-size:.74rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--orange-soft);
+    margin-bottom:8px;
+    font-weight:700;
+  }
+
+  /* card row */
+  .cards{
+    display:flex;
+    gap:20px;
+    margin-top:34px;
+    flex-wrap:wrap;
+    justify-content:center;
+    max-width:1000px;
+  }
+  .card{
+    background:linear-gradient(180deg,var(--card),var(--card-2));
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:24px 22px;
+    width:240px;
+    text-align:left;
+  }
+  .card .ic{font-size:2.2rem;margin-bottom:10px;}
+  .card h3{font-size:1.12rem;margin-bottom:6px;}
+  .card p{color:var(--muted);font-size:.95rem;line-height:1.5;}
+
+  /* diagram image */
+  .diagram{
+    max-width:min(940px,86vw);
+    max-height:64vh;
+    border-radius:14px;
+    border:1px solid var(--line);
+    box-shadow:0 30px 80px rgba(0,0,0,.55);
+    margin-top:24px;
+  }
+
+  /* layer list */
+  .layers{
+    margin-top:30px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    width:min(820px,88vw);
+  }
+  .layer{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    background:linear-gradient(180deg,var(--card),var(--card-2));
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:14px 20px;
+    text-align:left;
+  }
+  .layer .num{
+    flex:none;
+    width:42px;height:42px;
+    border-radius:10px;
+    background:var(--orange);
+    color:#fff;
+    font-weight:800;
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.1rem;
+  }
+  .layer h3{font-size:1.05rem;}
+  .layer p{color:var(--muted);font-size:.92rem;margin-top:2px;}
+
+  /* steps */
+  .steps{
+    margin-top:30px;
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+    justify-content:center;
+    max-width:960px;
+  }
+  .step{
+    background:linear-gradient(180deg,var(--card),var(--card-2));
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:18px 18px;
+    width:200px;
+    text-align:left;
+  }
+  .step .n{
+    color:var(--orange-soft);
+    font-weight:800;
+    font-size:.8rem;
+    letter-spacing:.12em;
+  }
+  .step p{margin-top:6px;font-size:.96rem;line-height:1.5;}
+
+  .pill{
+    margin-top:30px;
+    display:inline-block;
+    background:rgba(240,83,14,.14);
+    border:1px solid var(--orange);
+    color:var(--orange-soft);
+    padding:12px 22px;
+    border-radius:999px;
+    font-size:1rem;
+    font-weight:600;
+  }
+
+  /* ---------- Controls ---------- */
+  .nav{
+    position:fixed;
+    bottom:26px;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    align-items:center;
+    gap:16px;
+    z-index:30;
+  }
+  .nav button{
+    background:var(--card);
+    border:1px solid var(--line);
+    color:var(--text);
+    width:46px;height:46px;
+    border-radius:50%;
+    font-size:1.2rem;
+    cursor:pointer;
+    transition:.15s;
+  }
+  .nav button:hover{background:var(--orange);border-color:var(--orange);}
+  .nav button:disabled{opacity:.3;cursor:not-allowed;}
+  .nav button:disabled:hover{background:var(--card);border-color:var(--line);}
+  .counter{
+    font-size:.9rem;
+    color:var(--muted);
+    min-width:54px;
+    text-align:center;
+    font-variant-numeric:tabular-nums;
+  }
+  .progress{
+    position:fixed;
+    top:0;left:0;
+    height:4px;
+    background:var(--orange);
+    transition:width .35s ease;
+    z-index:40;
+  }
+  .hint{
+    position:fixed;
+    bottom:30px;right:30px;
+    font-size:.78rem;
+    color:var(--muted);
+    z-index:30;
+  }
+  .hint kbd{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:5px;
+    padding:1px 7px;
+    font-size:.74rem;
+  }
+  @media(max-width:640px){
+    .hint{display:none;}
+    .logo{height:26px;top:18px;left:20px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+<img src="heroforge-logo-white.png" class="logo" alt="Hero Forge" />
+
+<div class="deck" id="deck">
+
+  <!-- 1. TITLE -->
+  <section class="slide active">
+    <div class="kicker">Hero Forge · Beginner Guide</div>
+    <h1>The <span class="underline">n8n Factory</span></h1>
+    <p class="lead">Your AI Workflow Automation System</p>
+    <div class="pill">Let's break it down, one idea at a time →</div>
+  </section>
+
+  <!-- 2. THE PROBLEM / GOAL -->
+  <section class="slide">
+    <div class="kicker">The Goal</div>
+    <h2>What are we actually doing?</h2>
+    <p class="lead">We're going to build <span class="accent">automations</span> — little robots
+      that do boring computer tasks for you (send emails, move data, post updates) without you
+      lifting a finger.</p>
+    <div class="analogy">
+      <span class="tag">Think of it like this</span>
+      You're hiring a <b>tireless assistant</b>. But before an assistant can help, they need
+      a <b>desk, tools, training, and instructions</b>. The next slides explain each of those —
+      that whole set of things is called <b>"the stack."</b>
+    </div>
+  </section>
+
+  <!-- 3. THE BIG PICTURE (diagram) -->
+  <section class="slide">
+    <div class="kicker">The Big Picture</div>
+    <h2>This is the whole stack</h2>
+    <p class="lead">Don't worry — it looks busy. We'll explain every box.
+      Just notice it has <span class="accent">layers</span>, stacked like floors of a building.</p>
+    <img src="claude-code-n8n-stack.png" class="diagram" alt="The Claude Code + n8n stack diagram" />
+  </section>
+
+  <!-- 4. CODESPACE -->
+  <section class="slide">
+    <div class="kicker">Piece 1 — The Foundation</div>
+    <div class="bigicon">☁️💻</div>
+    <h2>What is a <span class="accent">Codespace?</span></h2>
+    <p class="lead">A Codespace is a <b>computer that lives on the internet</b>. You rent it,
+      it runs in the cloud, and you reach it through your web browser.</p>
+    <div class="analogy">
+      <span class="tag">Analogy</span>
+      It's like a <b>rental workshop in the cloud</b>. You don't need to buy tools or clear
+      space at home — you just open the door (a browser tab) and everything is already set up.
+      Turn it off and you're not paying for an empty room.
+    </div>
+  </section>
+
+  <!-- 5. VS CODE -->
+  <section class="slide">
+    <div class="kicker">Piece 2 — The Workspace</div>
+    <div class="bigicon">🗂️</div>
+    <h2>What is <span class="accent">VS Code?</span></h2>
+    <p class="lead">VS Code is the <b>app you look at</b> inside the Codespace. It shows your
+      files on one side and your work in the middle. It's where everything happens.</p>
+    <div class="analogy">
+      <span class="tag">Analogy</span>
+      If the Codespace is the workshop, <b>VS Code is the workbench</b> — the desk where you
+      lay out your files, tools, and projects so you can actually see and reach them.
+    </div>
+  </section>
+
+  <!-- 6. TERMINAL -->
+  <section class="slide">
+    <div class="kicker">Piece 3 — The Conversation Window</div>
+    <div class="bigicon">⌨️</div>
+    <h2>What is the <span class="accent">Terminal?</span></h2>
+    <p class="lead">The Terminal is a <b>text box where you type instructions</b> to the
+      computer — and where it types back. No buttons, just a conversation.</p>
+    <div class="analogy">
+      <span class="tag">Analogy</span>
+      It's the <b>walkie-talkie</b> to your computer. Instead of clicking around, you say what
+      you want in words. It looks old-school, but it's the fastest way to give commands —
+      and it's where you'll talk to your AI assistant.
+    </div>
+  </section>
+
+  <!-- 7. CLAUDE CODE -->
+  <section class="slide">
+    <div class="kicker">Piece 4 — The Assistant</div>
+    <div class="bigicon">🤖</div>
+    <h2>What is <span class="accent">Claude Code?</span></h2>
+    <p class="lead">Claude Code is an <b>AI assistant that lives in your Terminal</b>. You tell
+      it what you want in plain English, and it does the actual computer work for you.</p>
+    <div class="analogy">
+      <span class="tag">Analogy</span>
+      It's a <b>skilled employee who sits at your workbench</b>. You're the manager: you say
+      "build me a workflow that emails new customers." Claude figures out the how, and does it —
+      while you watch and approve.
+    </div>
+  </section>
+
+  <!-- 8. SKILLS -->
+  <section class="slide">
+    <div class="kicker">Piece 5 — Know-How</div>
+    <div class="bigicon">📚</div>
+    <h2>What are <span class="accent">Skills?</span></h2>
+    <p class="lead">Skills are <b>instruction manuals</b> Claude can open when it needs them.
+      Each one teaches Claude how to do a specific job really well.</p>
+    <div class="analogy">
+      <span class="tag">Analogy</span>
+      Think of a shelf of <b>recipe cards</b>. Your assistant doesn't memorize everything —
+      when a task comes up, it grabs the right card, follows the steps, and gets it right
+      the first time. More skills = more things it can do expertly.
+    </div>
+  </section>
+
+  <!-- 9. CONNECTORS / MCP -->
+  <section class="slide">
+    <div class="kicker">Piece 6 — Reaching the Outside World</div>
+    <div class="bigicon">🔌</div>
+    <h2>What are <span class="accent">Connectors</span> (MCP)?</h2>
+    <p class="lead">A Connector is a <b>cable that plugs Claude into another app</b> — like your
+      email, calendar, or your automation tool. The tech name for it is <b>MCP</b>.</p>
+    <div class="analogy">
+      <span class="tag">Analogy</span>
+      Skills are know-how; connectors are <b>hands and power outlets</b>. A connector lets
+      Claude actually <b>reach into</b> Gmail, Google Drive, or n8n and press the buttons —
+      not just talk about them. <b>MCP</b> is simply the standard shape of that plug.
+    </div>
+  </section>
+
+  <!-- 10. CLAUDE.md -->
+  <section class="slide">
+    <div class="kicker">Piece 7 — The Job Training</div>
+    <div class="bigicon">📋</div>
+    <h2>What is <span class="accent">CLAUDE.md?</span></h2>
+    <p class="lead">CLAUDE.md is a <b>text file of instructions</b> that Claude reads
+      automatically every time it starts. It's the rulebook for this project.</p>
+    <div class="analogy">
+      <span class="tag">Analogy</span>
+      It's the <b>employee handbook</b> handed to your assistant on day one: "Here's how we do
+      things, here's the tools to use, here's what to never do." Because Claude reads it every
+      time, it instantly becomes an expert in <i>your</i> project.
+    </div>
+  </section>
+
+  <!-- 11. n8n -->
+  <section class="slide">
+    <div class="kicker">Piece 8 — The Factory Floor</div>
+    <div class="bigicon">⚙️</div>
+    <h2>What is <span class="accent">n8n?</span></h2>
+    <p class="lead">n8n is the <b>automation tool</b> where the robots actually live. You connect
+      boxes together — "when this happens, do that" — and it runs them for you, forever.</p>
+    <div class="analogy">
+      <span class="tag">Analogy</span>
+      n8n is the <b>factory floor</b>. Claude is the engineer that designs and builds the
+      assembly lines (called <b>workflows</b>); n8n is where those lines run day and night,
+      doing the real work without you.
+    </div>
+  </section>
+
+  <!-- 12. SKILLS vs CONNECTORS quick contrast -->
+  <section class="slide">
+    <div class="kicker">Quick Check — Easy to Mix Up</div>
+    <h2>Skills vs. Connectors</h2>
+    <div class="cards">
+      <div class="card">
+        <div class="ic">📚</div>
+        <h3>Skills = Knowledge</h3>
+        <p>Manuals that teach Claude <i>how</i> to do something well. They live inside the project.</p>
+      </div>
+      <div class="card">
+        <div class="ic">🔌</div>
+        <h3>Connectors = Reach</h3>
+        <p>Cables that let Claude <i>act</i> on outside apps like Gmail or n8n. Built on MCP.</p>
+      </div>
+      <div class="card">
+        <div class="ic">📋</div>
+        <h3>CLAUDE.md = Rules</h3>
+        <p>The handbook that tells Claude how to behave on <i>this</i> project, every time.</p>
+      </div>
+    </div>
+    <p class="lead">Knowledge to think · Reach to act · Rules to stay on track.</p>
+  </section>
+
+  <!-- 13. THE LAYERS RECAP -->
+  <section class="slide">
+    <div class="kicker">Putting It Together</div>
+    <h2>The stack, floor by floor</h2>
+    <div class="layers">
+      <div class="layer"><div class="num">1</div><div><h3>Infrastructure — the Codespace</h3><p>A rented cloud computer. The ground the whole thing stands on.</p></div></div>
+      <div class="layer"><div class="num">2</div><div><h3>Workspace — VS Code &amp; Terminal</h3><p>The desk you see, and the text box where you give commands.</p></div></div>
+      <div class="layer"><div class="num">3</div><div><h3>Assistant — Claude Code</h3><p>The AI that does the work, guided by CLAUDE.md and Skills.</p></div></div>
+      <div class="layer"><div class="num">4</div><div><h3>Tools — Skills &amp; Connectors (MCP)</h3><p>Know-how to think with, and cables to reach other apps.</p></div></div>
+      <div class="layer"><div class="num">5</div><div><h3>The Factory — n8n</h3><p>Where the automations Claude builds actually run.</p></div></div>
+    </div>
+  </section>
+
+  <!-- 14. HOW A TASK FLOWS -->
+  <section class="slide">
+    <div class="kicker">A Day in the Life</div>
+    <h2>What happens when you ask for something</h2>
+    <div class="steps">
+      <div class="step"><div class="n">STEP 1</div><p>You type a request into the <b>Terminal</b> in plain English.</p></div>
+      <div class="step"><div class="n">STEP 2</div><p><b>Claude</b> reads <b>CLAUDE.md</b> and opens the right <b>Skills</b>.</p></div>
+      <div class="step"><div class="n">STEP 3</div><p>It uses <b>Connectors</b> to build the workflow inside <b>n8n</b>.</p></div>
+      <div class="step"><div class="n">STEP 4</div><p>The automation <b>runs on its own</b> — the robot is now working for you.</p></div>
+    </div>
+    <p class="lead">You stay the manager. Claude does the building. n8n does the running.</p>
+  </section>
+
+  <!-- 15. CLOSE -->
+  <section class="slide">
+    <div class="kicker">You're Ready</div>
+    <h1>That's the <span class="underline">whole stack.</span></h1>
+    <p class="lead">Cloud computer · a workbench · a walkie-talkie · an AI assistant ·
+      its manuals · its cables · its handbook · and a factory. Nothing more to fear —
+      let's go build something.</p>
+    <div class="pill">Next stop: your first automation 🚀</div>
+  </section>
+
+</div>
+
+<!-- Controls -->
+<div class="nav">
+  <button id="prev" aria-label="Previous">‹</button>
+  <span class="counter" id="counter">1 / 15</span>
+  <button id="next" aria-label="Next">›</button>
+</div>
+<div class="hint">Use <kbd>←</kbd> <kbd>→</kbd> arrow keys</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  const counter = document.getElementById('counter');
+  const progress = document.getElementById('progress');
+  let i = 0;
+
+  function show(n){
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
+    counter.textContent = (i + 1) + ' / ' + slides.length;
+    progress.style.width = ((i + 1) / slides.length * 100) + '%';
+    prevBtn.disabled = i === 0;
+    nextBtn.disabled = i === slides.length - 1;
+  }
+
+  prevBtn.onclick = () => show(i - 1);
+  nextBtn.onclick = () => show(i + 1);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') show(i + 1);
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') show(i - 1);
+    if (e.key === 'Home') show(0);
+    if (e.key === 'End') show(slides.length - 1);
+  });
+
+  // swipe support for touch
+  let x0 = null;
+  document.addEventListener('touchstart', e => x0 = e.touches[0].clientX);
+  document.addEventListener('touchend', e => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    if (dx < -50) show(i + 1);
+    if (dx > 50) show(i - 1);
+    x0 = null;
+  });
+
+  show(0);
+</script>
+</body>
+</html>

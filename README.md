@@ -174,6 +174,8 @@ The connector only loads when a Claude Code session starts, so start a new one:
 
 The new session loads the connection from `.mcp.json`.
 
+> ⏳ **First time may be slow.** On the very first session, `npx` has to download the `n8n-mcp` package before it can connect, so the first connection check can time out. This is normal — just start one more new session (or ask again) and it connects instantly, because the package is now cached locally.
+
 Now **test the connection for real.** In Claude Code, ask:
 
 > **What n8n workflows do I have?**
@@ -318,11 +320,12 @@ Things you can ask the Factory any time:
 ## Troubleshooting
 
 **Claude can't see my n8n workflows / says it can't access n8n.**
-1. Check that `.mcp.json` exists (not just `.mcp.json.example`) and that both the URL and API key are filled in with no quotes missing.
-2. The URL should have no trailing slash and look like `https://your-name.app.n8n.cloud`.
-3. API keys expire. If yours is old, create a fresh one in n8n (**Settings → n8n API**) and update `.mcp.json`.
-4. After any change to `.mcp.json`, start a **new Claude Code session** — extension: the **+** button; terminal: `exit` then `dsp` again. Changes only take effect in a fresh session.
-5. Re-test by asking *"What n8n workflows do I have?"* — never rely on a "Connected" badge.
+1. **First connection timed out?** This is expected on the very first run — `npx` is downloading the `n8n-mcp` package. Start another new session and try again; once the package is cached it connects instantly.
+2. Check that `.mcp.json` exists (not just `.mcp.json.example`) and that both the URL and API key are filled in with no quotes missing.
+3. The URL should have no trailing slash and look like `https://your-name.app.n8n.cloud`.
+4. API keys expire. If yours is old, create a fresh one in n8n (**Settings → n8n API**) and update `.mcp.json`.
+5. After any change to `.mcp.json`, start a **new Claude Code session** — extension: the **+** button; terminal: `exit` then `dsp` again. Changes only take effect in a fresh session.
+6. Re-test by asking *"What n8n workflows do I have?"* — never rely on a "Connected" badge.
 
 **A workflow runs but a step fails.**
 Copy the error message from n8n and paste it to Claude: *"This step failed with: [error]. Fix it."*
