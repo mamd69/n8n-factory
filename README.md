@@ -106,6 +106,8 @@ When it loads you'll see **VS Code** — a code editor — with three areas:
 
 The Factory needs two things from your n8n account: your **instance URL** and an **API key**.
 
+> 💡 **Need a paid n8n plan?** A paid plan is required for the API key. **[Upgrade your n8n account through this link](https://n8n.partnerlinks.io/p2xklomu2gq2)** to get extra credits.
+
 **Get them from n8n:**
 - **Instance URL** — the web address of your n8n, e.g. `https://your-name.app.n8n.cloud`
 - **API key** — in n8n, go to **Settings → n8n API → Create an API key**, then copy it. *(This is why a paid n8n plan is required — free plans can't create API keys.)*
@@ -118,12 +120,12 @@ Claude will create the file and ask you for the two values. Paste them in when p
 
 > 🔒 **Your key stays private.** `.mcp.json` is listed in `.gitignore`, so your API key is never uploaded to GitHub. (Prefer to do it by hand? Open `.mcp.json.example`, copy it to `.mcp.json`, and replace the two placeholder values yourself.)
 
-## Part 6 — Reload and verify it worked
+## Part 6 — Start a fresh session and verify it worked
 
-The connector only loads when Claude Code starts, so you need to reload once:
+The connector only loads when a Claude Code session starts, so start a new one:
 
-1. Press **Ctrl+Shift+P** (Windows) or **Cmd+Shift+P** (Mac) to open the command bar.
-2. Type **Reload Window** and press Enter. The Codespace reloads in a few seconds.
+1. In the Claude Code panel, click the **+** (New session) button at the top.
+2. The new session loads the connection from `.mcp.json`.
 
 Now **test the connection for real.** In the Claude Code chat, ask:
 
@@ -148,13 +150,22 @@ This is the fun part. The Factory works as a 4-step assembly line, and the numbe
 
 ## Step 1 — Tell the Factory about your business 📋
 
-Great automation ideas depend on knowing *your* business. Open [1-inputs/tech-stack.md](1-inputs/tech-stack.md) — it's a fill-in form covering your role, your departments, the tools you use, and your biggest time-wasters.
+Great automation ideas depend on knowing *your* business. The `1-inputs/` folder holds two fill-in forms:
 
-Fill it in yourself, **or** let Claude interview you. Paste this prompt:
+- **[1-inputs/about.md](1-inputs/about.md)** — what your business *is*: what you do, your customers, your brand voice.
+- **[1-inputs/tech-stack.md](1-inputs/tech-stack.md)** — what your business *uses*: your role, your departments, your tools, your biggest time-wasters.
+
+The fastest way to fill in `about.md` is to let Claude interview you starting from your website. Paste this prompt:
+
+> **Look at our website https://your-company.com and interview me one question at a time to fill in `1-inputs/about.md`.**
+
+Then do the same for your tools:
 
 > **Interview me one question at a time and fill in `1-inputs/tech-stack.md` with my answers.**
 
-Do this once. Everything the Factory builds from now on is tailored to what's in this file.
+You can also **fill either file in yourself**, or **drop your own documents into the `1-inputs/` folder** for extra context — brand guidelines, a pitch deck, an existing About page, product sheets. (To upload a file, drag it from your computer into the `1-inputs/` folder in the VS Code Explorer on the left.) The Factory reads everything in `1-inputs/`.
+
+Do this once. Everything the Factory builds from now on is tailored to what's in this folder.
 
 ## Step 2 — Brainstorm workflow ideas 💡
 
@@ -235,7 +246,7 @@ my-n8n-factory/
 ├── .mcp.json            ← your private n8n connection (never uploaded)
 ├── .mcp.json.example    ← the template for the file above
 ├── .claude/skills/      ← the 7 expert skills
-├── 1-inputs/            ← tech-stack.md — tell the Factory about your business
+├── 1-inputs/            ← about.md + tech-stack.md (+ any context you add)
 ├── 2-brainstorm/        ← workflow ideas land here
 ├── 3-plan/              ← detailed workflow designs land here
 └── 4-workflows/         ← built workflows + how-to-use guides land here
@@ -247,6 +258,7 @@ my-n8n-factory/
 
 Things you can ask the Factory any time:
 
+- *"Explain to me what this is and how to use it."*
 - *"Build a workflow that emails me an AI-generated news summary every morning at 6:00 AM."*
 - *"Review `1-inputs/tech-stack.md` and give me 5 workflow ideas that would increase my profit."*
 - *"What n8n workflows do I already have?"*
@@ -262,7 +274,7 @@ Things you can ask the Factory any time:
 1. Check that `.mcp.json` exists (not just `.mcp.json.example`) and that both the URL and API key are filled in with no quotes missing.
 2. The URL should have no trailing slash and look like `https://your-name.app.n8n.cloud`.
 3. API keys expire. If yours is old, create a fresh one in n8n (**Settings → n8n API**) and update `.mcp.json`.
-4. After any change to `.mcp.json`, **Reload Window** (Ctrl/Cmd+Shift+P → *Reload Window*) — changes only take effect on reload.
+4. After any change to `.mcp.json`, start a **new Claude Code session** (the **+** button) — changes only take effect in a fresh session.
 5. Re-test by asking *"What n8n workflows do I have?"* — never rely on a "Connected" badge.
 
 **A workflow runs but a step fails.**
